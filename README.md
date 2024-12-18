@@ -8,3 +8,6 @@ This is a bash script to control the output limit of Growatt 600 TL-X Inverter. 
 * hichi read head for meter (optional: just for measuring current power usage what can be done on other ways as well)
 * Home Assistant Installation (optional: just for controlling script execution)
 * Shine WiFi-X WLAN Adapter with otti firmware connected to inverter (https://github.com/otti/Growatt_ShineWiFi-S/tree/master)
+
+### notes
+* The inverter will change output limit really slowly. This could be the case because of legal regulations in Germany. No matter but it works :)
