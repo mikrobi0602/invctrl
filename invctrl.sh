@@ -5,6 +5,7 @@ echo "INV CONTROL"
 echo "==========="
 echo
 
+# make sure the currently used power (in Watt) is provided as input variable
 if [[ -z $1 ]]; then
 	echo "usage: invctrl.sh <current-power-consumption>"; exit 1
 fi
@@ -14,11 +15,12 @@ fi
 #############
 
 
-# maximum power output of inverter in Watt
+# maximum power output of inverter in Watt (note: inverter can be set to 600W, 750W or 1000W by a register)
+# important to specify to get the correct percentage for output change
 export OUTPUT_MAX=750
 
 # currently set inverter output in %
-# do until we get value, i is counter and when >5 exit
+# do until we get a valid value, i is counter and when >5 exit (inverter goes off during the night)
 i=0
 while ! [[ ${OUTPUT_CURR} == ?(-)+([0-9]) ]]
 do
@@ -27,6 +29,7 @@ do
 	i=$(expr $i + 1); if [[ $i -gt 5 ]]; then echo "got no value - inverter probably offline"; logger "invctrl executed with value ${1}W - no reply from inverter (probably offline)"; exit 1; fi
 done
 
+# define and initialize vars
 # inverter output to set in %
 export OUTPUT_SET=100
 
@@ -36,20 +39,18 @@ export OPERATION="none"
 # currently used power in watt (input variable)
 export POWER_CURR=$1
 
-# factor for reducing or increasing inverter output
+# factor for reducing or increasing inverter output (how many percent up or down)
 export OUTPUT_FACTOR=5
 
-
-
+# function calculates the value in % to de- or increse from current output related to the maximum output of inverter
 calc_factor ()
 {
-	# function calculates the value in % to de- or increse from current output related to the maximum output of inverter
 	OUTPUT_FACTOR=$(expr 100 \* ${POWER_CURR} / ${OUTPUT_MAX})
 }
 
+# function to set operation increase or decrease power depending of injection (negative) or consumption (positive) of energy
 set_operation ()
 {
-	# function to set increase or decrease power depending of injection (negative) or consumption (positive) of energy
         if [ ${POWER_CURR} -lt 0 ]; then
 	       	OPERATION="decrease"
        	else
@@ -57,9 +58,9 @@ set_operation ()
 	fi
 }
 
+# function to set new output limit after calculation - check final setting if in rage between 5 & 100
 set_output_limit ()
 {
-	# function to set output limit after calculation - check final setting if in rage between 5 & 100
 	OUTPUT_SET=$(expr ${OUTPUT_CURR} + ${OUTPUT_FACTOR})
 	if [ ${OUTPUT_SET} -lt 5 ]; then
 		OUTPUT_SET=5
@@ -74,10 +75,12 @@ set_output_limit ()
 	done
 }
 
+# call functions
 calc_factor
 set_operation
 set_output_limit
 
+# info output to console
 echo
 echo "current output limit:          ${OUTPUT_CURR}%"
 echo "current Powerconsumption:      ${POWER_CURR}W"
