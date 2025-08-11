@@ -17,4 +17,4 @@ This is a Linux bash script to control the output limit of Growatt 600 TL-X Inve
 * adapt variable inside the script (OUTPUT_MAX=600 for 600TL-X)
 * adapt the IP of the Inverter in function set_output_limit ()
 * make the file executeable (chmod)
-* run it: "./invctrl.sh <current-power-consumption>"
+* run it: "./invctrl.sh \<current-power-consumption>"
