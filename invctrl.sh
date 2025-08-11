@@ -40,7 +40,7 @@ export OPERATION="none"
 export POWER_CURR=$1
 
 # factor for reducing or increasing inverter output (how many percent up or down)
-export OUTPUT_FACTOR=5
+export OUTPUT_FACTOR=2
 
 # function calculates the value in % to de- or increse from current output related to the maximum output of inverter
 calc_factor ()
@@ -58,12 +58,12 @@ set_operation ()
 	fi
 }
 
-# function to set new output limit after calculation - check final setting if in rage between 5 & 100
+# function to set new output limit after calculation - check final setting if in rage between 2 & 100
 set_output_limit ()
 {
 	OUTPUT_SET=$(expr ${OUTPUT_CURR} + ${OUTPUT_FACTOR})
-	if [ ${OUTPUT_SET} -lt 5 ]; then
-		OUTPUT_SET=5
+	if [ ${OUTPUT_SET} -lt 2 ]; then
+		OUTPUT_SET=2
 	elif [ ${OUTPUT_SET} -gt 100 ]; then
 		OUTPUT_SET=100
 	fi
