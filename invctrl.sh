@@ -105,7 +105,7 @@ then
 	disable_inv && exit 0 
 elif [ $1 == 'on' ];
 then
-        enable_inv && exit 0
+    enable_inv && exit 0
 fi
 read_output_limit
 calc_factor
